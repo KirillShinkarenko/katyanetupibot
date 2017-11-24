@@ -14,6 +14,7 @@ logChatId = -281676857
 hardCoreChatId = -1001141052816
 kirillChatId = 241118222
 kateChatId = 287805371
+lisaChatId = 251478838
 
 randPhrases = ["{}, больной ублюдок",
                "{}, что ты несешь?",
@@ -22,9 +23,17 @@ randPhrases = ["{}, больной ублюдок",
                "{}, с тебя 100 рублей в копилку"
                "{}, спорим на соточку?",
                "{}, ты просто 🐽",
-               "Забудь, {}",
+               "го бухнём всем чатом?",
                "Э, {}!",
-               "{}, ну не тупи"]
+               "{}, ну не тупи",
+               "Да ну вас в пень",
+               "Эй, а как же я?!",
+               "Ты жесток...",
+               "Наркоман штоле?",
+               "го в столовку",
+               "кто в столовку?",
+               "есть хочу",
+               "{}, есть хочешь?"]
 
 
 @bot.message_handler(commands=['start', 'help'])
@@ -52,7 +61,7 @@ def send_katy(message):
     s = message.text
     d = s[3:]
     if d != "":
-        bot.send_message(251478838, d)
+        bot.send_message(lisaChatId, d)
     send_logs(message)
 
 
@@ -63,7 +72,7 @@ def send_katy(message):
     if d != "":
         bot.send_message(kirillChatId, d)
     else:
-        bot.send_message(kirillChatId, 'oh wow')
+        bot.send_message(kirillChatId, 'lol kirill')
     send_logs(message)
 
 
@@ -73,6 +82,8 @@ def send_katy(message):
     d = message.text[5:]
     if d != "":
         bot.send_message(kateChatId, d)
+    else:
+        bot.send_message(kateChatId, 'oh wow')
     send_logs(message)
 
 @bot.message_handler(commands=['ping'])
