@@ -13,6 +13,7 @@ bot = telebot.TeleBot("347990160:AAFkHTWEjTJ0_XuE0Lqaqi0aIvEAD5ImRZk")
 logChatId = -281676857
 hardCoreChatId = -1001141052816
 kirillChatId = 241118222
+kateChatId = 287805371
 
 randPhrases = ["{}, больной ублюдок",
                "{}, что ты несешь?",
@@ -54,6 +55,25 @@ def send_katy(message):
         bot.send_message(251478838, d)
     send_logs(message)
 
+
+@bot.message_handler(commands=['ks'])
+def send_katy(message):
+    s = message.text
+    d = s[4:]
+    if d != "":
+        bot.send_message(kirillChatId, d)
+    else:
+        bot.send_message(kirillChatId, 'oh wow')
+    send_logs(message)
+
+
+@bot.message_handler(commands=['kate'])
+def send_katy(message):
+    s = message.text
+    d = message.text[5:]
+    if d != "":
+        bot.send_message(kateChatId, d)
+    send_logs(message)
 
 @bot.message_handler(commands=['ping'])
 def perform_ping(message):
@@ -103,15 +123,6 @@ def send_logs(message):
     log = chat_id + " | " + user_name + " | " + message
     bot.send_message(logChatId, log)
 
-@bot.message_handler(commands=['ks'])
-def send_katy(message):
-    s = message.text
-    d = s[4:]
-    if d != "":
-        bot.send_message(kirillChatId, d)
-    else:
-        bot.send_message(kirillChatId, 'oh wow')
-    send_logs(message)
 
 
 bot.polling()
