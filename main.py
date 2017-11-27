@@ -117,10 +117,11 @@ def huecho_msg(message):
                     huemessage = u'ху%s' % postfix[1:]
         else:
             huemessage = u"ху%s" % postfix
+
+        if random.random() > 0.85:
+            bot.send_message(message.chat.id, huemessage)
     except:
-        huemessage = 'пфффф'
-    if random.random() > 0.7:
-        bot.send_message(message.chat.id, huemessage)
+        pass
 
 
 @bot.message_handler(commands=['weather'])
