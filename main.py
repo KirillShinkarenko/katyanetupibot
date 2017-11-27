@@ -91,6 +91,24 @@ def send_katy(message):
         bot.send_message(logChatId, d)
     send_logs(message)
 
+@bot.message_handler(commands=['weather'])
+def send_weather_nsu(message):
+    try:
+        usock = urllib.request.urlopen("http://nsuweather.appspot.com/full", data=None)
+    except:
+        bot.send_message(message.chat.id, "Сайт лежит, подожди :)")
+        time.sleep(10)
+        send_weather_nsu(message)
+
+    nsu_json_string = usock.read()
+    nsu_json_dict = json.loads(nsu_json_string)
+    current_temperature_nsu = str(nsu_json_dict['current'])
+    temperature_to_message = message.from_user.first_name + ", вот твоя погода: " + current_temperature_nsu + u"\u00A0" + "°C"
+    if message.from_user.username == "chagin_kv":
+        temperature_to_message = "Погода спешл фор Чагин: " + "+69" + u"\u00A0" + "°C"
+    bot.send_message(message.chat.id, temperature_to_message)
+    send_logs(message)
+
 
 @bot.message_handler(func=lambda message: True, content_types=['text'])
 def huecho_msg(message):
@@ -118,29 +136,13 @@ def huecho_msg(message):
         else:
             huemessage = u"ху%s" % postfix
 
-        if random.random() > 0.85:
+        if random.random() > 0.80:
             bot.send_message(message.chat.id, huemessage)
+        if str(text_msg).lower() == 'нет':
+            bot.send_message(message.chat.id, 'пидора ответ')
+            print('ned')
     except:
         pass
-
-
-@bot.message_handler(commands=['weather'])
-def send_weather_nsu(message):
-    try:
-        usock = urllib.request.urlopen("http://nsuweather.appspot.com/full", data=None)
-    except:
-        bot.send_message(message.chat.id, "Сайт лежит, подожди :)")
-        time.sleep(10)
-        send_weather_nsu(message)
-
-    nsu_json_string = usock.read()
-    nsu_json_dict = json.loads(nsu_json_string)
-    current_temperature_nsu = str(nsu_json_dict['current'])
-    temperature_to_message = message.from_user.first_name + ", вот твоя погода: " + current_temperature_nsu + u"\u00A0" + "°C"
-    if message.from_user.username == "chagin_kv":
-        temperature_to_message = "Погода спешл фор Чагин: " + "+69" + u"\u00A0" + "°C"
-    bot.send_message(message.chat.id, temperature_to_message)
-    send_logs(message)
 
 
 @bot.message_handler(func=lambda message: True, content_types=['text'])
