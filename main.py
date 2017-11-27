@@ -3,6 +3,7 @@ import random
 import urllib
 import json
 import codecs
+import re
 from datetime import time
 
 import telebot
@@ -17,6 +18,12 @@ hardCoreChatId = str(chatIds['hardCoreChatId'])
 kirillChatId = str(chatIds['kirillChatId'])
 kateChatId = str(chatIds['kateChatId'])
 lisaChatId = str(chatIds['lisaChatId'])
+
+NON_LETTERS = re.compile(u'[^а-яё \-]+', flags=re.UNICODE)
+ONLY_DASHES = re.compile(u'^\-+$', flags=re.UNICODE)
+PREFIX = re.compile(u"^[бвгджзйклмнпрстфхцчшщьъ]+", flags=re.UNICODE)
+vowels = {'о', 'е', 'а', 'я', 'у', 'ю', 'ы'}
+rules = {'о': 'е', 'а': 'я', 'у': 'ю', 'ы': 'и'}
 
 randPhrases = codecs.open("ne_tupi_phrases.txt", "r", "utf-8").read().split("\n")
 
@@ -85,6 +92,34 @@ def send_katy(message):
     send_logs(message)
 
 
+@bot.message_handler(func=lambda message: True, content_types=['text'])
+def huecho_msg(message):
+    text_msg = message.text
+    words = text_msg.split()
+    if len(words) > 3:
+        pass
+    word = NON_LETTERS.sub("", words[-1].lower())
+    if ONLY_DASHES.match(word):
+        pass
+    postfix = PREFIX.sub("", word)
+    if word[:2] == "ху" and postfix[1] in rules.values():
+        pass
+    if len(postfix) < 3:
+        pass
+    if postfix[0] in rules:
+        if postfix[1] not in vowels:
+            huemessage = "ху%s%s" % (rules[postfix[0]], postfix[1:])
+        else:
+            if postfix[1] in rules:
+                huemessage = u"ху%s%s" % (rules[postfix[1]], postfix[2:])
+            else:
+                huemessage = u'ху%s' % postfix[1:]
+    else:
+        huemessage = u"ху%s" % postfix
+    if random.random() > 0.2:
+        bot.send_message(message.chat.id, huemessage)
+
+
 @bot.message_handler(commands=['weather'])
 def send_weather_nsu(message):
     try:
@@ -114,8 +149,11 @@ def echo_msg(message):
         if random.random() > 0.85:
             bot.send_message(message.chat.id, message.from_user.first_name + ", ты поняла?")
 
-    if random.random() > 0.85:
+    if random.random() > 0.88:
         bot.send_message(message.chat.id, random.choice(randPhrases).format(user_name))
+
+
+@bot.message_handler(func=lambda message: True, content_types=['text'])
 
 
 def send_logs(message):
