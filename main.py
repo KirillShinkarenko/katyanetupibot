@@ -6,34 +6,19 @@ import codecs
 from datetime import time
 
 import telebot
-from bs4 import BeautifulSoup
 
 token = codecs.open("ne_tupi_token.txt", "r", "utf-8").read()
-bot = telebot.TeleBot("347990160:AAFkHTWEjTJ0_XuE0Lqaqi0aIvEAD5ImRZk")
-logChatId = -281676857
-hardCoreChatId = -1001141052816
-kirillChatId = 241118222
-kateChatId = 287805371
-lisaChatId = 251478838
+bot = telebot.TeleBot(token)
+chatIds = codecs.open("ne_tupi_ids.txt", "r", "utf-8-sig").read()
+chatIds = json.loads(chatIds)
 
-randPhrases = ["{}, больной ублюдок",
-               "{}, что ты несешь?",
-               "{}, не хочешь бухнуть сегодня?",
-               'мда, {}, мда',
-               "{}, с тебя 100 рублей в копилку"
-               "{}, спорим на соточку?",
-               "{}, ты просто 🐽",
-               "го бухнём всем чатом?",
-               "Э, {}!",
-               "{}, ну не тупи",
-               "Да ну вас в пень",
-               "Эй, а как же я?!",
-               "Ты жесток...",
-               "Наркоман штоле?",
-               "го в столовку",
-               "кто в столовку?",
-               "есть хочу",
-               "{}, есть хочешь?"]
+logChatId = str(chatIds['logChatId'])
+hardCoreChatId = str(chatIds['hardCoreChatId'])
+kirillChatId = str(chatIds['kirillChatId'])
+kateChatId = str(chatIds['kateChatId'])
+lisaChatId = str(chatIds['lisaChatId'])
+
+randPhrases = codecs.open("ne_tupi_phrases.txt", "r", "utf-8").read().split("\n")
 
 
 @bot.message_handler(commands=['start', 'help'])
@@ -56,6 +41,7 @@ def send_katy(message):
         bot.send_message(hardCoreChatId, d)
     send_logs(message)
 
+
 @bot.message_handler(commands=['l'])
 def send_katy(message):
     s = message.text
@@ -73,7 +59,6 @@ def send_katy(message):
         bot.send_message(kirillChatId, d)
     else:
         bot.send_message(kirillChatId, 'lol kirill')
-    send_logs(message)
 
 
 @bot.message_handler(commands=['kate'])
@@ -84,7 +69,7 @@ def send_katy(message):
         bot.send_message(kateChatId, d)
     else:
         bot.send_message(kateChatId, 'oh wow')
-    send_logs(message)
+
 
 @bot.message_handler(commands=['ping'])
 def perform_ping(message):
@@ -111,10 +96,10 @@ def send_weather_nsu(message):
 
     nsu_json_string = usock.read()
     nsu_json_dict = json.loads(nsu_json_string)
-    current_temperature_nsu = str(nsu_json_dict ['current'])
-    temperature_to_message = message.from_user.first_name + ", вот твоя погода: " + current_temperature_nsu + " °C"
+    current_temperature_nsu = str(nsu_json_dict['current'])
+    temperature_to_message = message.from_user.first_name + ", вот твоя погода: " + current_temperature_nsu + u"\u00A0" + "°C"
     if message.from_user.username == "chagin_kv":
-        temperature_to_message = message.from_user.first_name + ", вот твоя погода: " + "+69" + " °C"
+        temperature_to_message = "Погода спешл фор Чагин: " + "+69" + u"\u00A0" + "°C"
     bot.send_message(message.chat.id, temperature_to_message)
     send_logs(message)
 
@@ -122,18 +107,26 @@ def send_weather_nsu(message):
 @bot.message_handler(func=lambda message: True, content_types=['text'])
 def echo_msg(message):
     user_name = message.from_user.first_name
-    if random.random() > 0.95:
+    if user_name is None:
+        user_name = message.from_user.first_name + message.from_user.last_name
+
+    if user_name == "EkaterinaBerestova":
+        if random.random() > 0.85:
+            bot.send_message(message.chat.id, message.from_user.first_name + ", ты поняла?")
+
+    if random.random() > 0.85:
         bot.send_message(message.chat.id, random.choice(randPhrases).format(user_name))
 
 
 def send_logs(message):
     chat_id = str(message.chat.id)
     user_name = message.from_user.username
+    if user_name is None:
+        user_name = message.from_user.first_name + message.from_user.last_name
     user_first_name = message.from_user.first_name
     message = message.text
     log = chat_id + " | " + user_name + " | " + message
     bot.send_message(logChatId, log)
-
 
 
 bot.polling()
