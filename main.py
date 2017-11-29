@@ -122,9 +122,9 @@ def huecho_msg(message):
         user_name = message.from_user.first_name + message.from_user.last_name
     if str(text_msg).lower() == 'нет':
         bot.send_message(message.chat.id, 'пидора ответ')
-    if 0.5 < huendom < 0.8:
+    if 0.7 < huendom < 0.8:
         bot.send_message(message.chat.id, random.choice(randPhrases).format(user_name))
-    if huendom > 0.8:
+    if huendom > 0.88:
         try:
             if len(words) < 3:
                 pass
