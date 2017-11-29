@@ -91,6 +91,7 @@ def send_katy(message):
         bot.send_message(logChatId, d)
     send_logs(message)
 
+
 @bot.message_handler(commands=['weather'])
 def send_weather_nsu(message):
     try:
@@ -116,39 +117,39 @@ def huecho_msg(message):
     text_msg = message.text
     words = text_msg.split()
     user_name = message.from_user.first_name
-    if str(text_msg).lower() == 'нет':
-        bot.send_message(message.chat.id, 'пидора ответ')
     if user_name is None:
         user_name = message.from_user.first_name + message.from_user.last_name
-    try:
-        if len(words) < 3:
-            pass
-        word = NON_LETTERS.sub("", words[-1].lower())
-        if ONLY_DASHES.match(word):
-            pass
-        postfix = PREFIX.sub("", word)
-        if word[:2] == "ху" and postfix[1] in rules.values():
-            pass
-        if len(postfix) < 3:
-            pass
-        if postfix[0] in rules:
-            if postfix[1] not in vowels:
-                huemessage = "ху%s%s" % (rules[postfix[0]], postfix[1:])
-            else:
-                if postfix[1] in rules:
-                    huemessage = u"ху%s%s" % (rules[postfix[1]], postfix[2:])
+    if str(text_msg).lower() == 'нет':
+        bot.send_message(message.chat.id, 'пидора ответ')
+    if 0.5 < huendom < 0.8:
+        bot.send_message(message.chat.id, random.choice(randPhrases).format(user_name))
+    if huendom > 0.8:
+        try:
+            if len(words) < 3:
+                pass
+            word = NON_LETTERS.sub("", words[-1].lower())
+            if ONLY_DASHES.match(word):
+                pass
+            postfix = PREFIX.sub("", word)
+            if word[:2] == "ху" and postfix[1] in rules.values():
+                pass
+            if len(postfix) < 3:
+                pass
+            if postfix[0] in rules:
+                if postfix[1] not in vowels:
+                    huemessage = "ху%s%s" % (rules[postfix[0]], postfix[1:])
                 else:
-                    huemessage = u'ху%s' % postfix[1:]
-        else:
-            huemessage = u"ху%s" % postfix
+                    if postfix[1] in rules:
+                        huemessage = u"ху%s%s" % (rules[postfix[1]], postfix[2:])
+                    else:
+                        huemessage = u'ху%s' % postfix[1:]
+            else:
+                huemessage = u"ху%s" % postfix
+        except:
+            pass
+        print('huelo')
+        bot.send_message(message.chat.id, huemessage)
 
-        if 0.5 < huendom < 0.8:
-            bot.send_message(message.chat.id, random.choice(randPhrases).format(user_name))
-        elif huendom() > 0.8:
-            bot.send_message(message.chat.id, huemessage)
-
-    except:
-        pass
 
 @bot.message_handler(func=lambda message: True, content_types=['text'])
 def send_logs(message):
