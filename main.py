@@ -146,10 +146,9 @@ def huecho_msg(message):
                         huemessage = u'ху%s' % postfix[1:]
             else:
                 huemessage = u"ху%s" % postfix
+                bot.send_message(message.chat.id, huemessage)
         except:
             pass
-        print('huelo')
-        bot.send_message(message.chat.id, huemessage)
 
 
 @bot.message_handler(func=lambda message: True, content_types=['text'])
