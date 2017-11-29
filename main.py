@@ -112,8 +112,14 @@ def send_weather_nsu(message):
 
 @bot.message_handler(func=lambda message: True, content_types=['text'])
 def huecho_msg(message):
+    huendom = random.random()
     text_msg = message.text
     words = text_msg.split()
+    user_name = message.from_user.first_name
+    if str(text_msg).lower() == 'нет':
+        bot.send_message(message.chat.id, 'пидора ответ')
+    if user_name is None:
+        user_name = message.from_user.first_name + message.from_user.last_name
     try:
         if len(words) < 3:
             pass
@@ -136,38 +142,20 @@ def huecho_msg(message):
         else:
             huemessage = u"ху%s" % postfix
 
-        if random.random() > 0.80:
+        if 0.5 < huendom < 0.8:
+            bot.send_message(message.chat.id, random.choice(randPhrases).format(user_name))
+        elif huendom() > 0.8:
             bot.send_message(message.chat.id, huemessage)
-        if str(text_msg).lower() == 'нет':
-            bot.send_message(message.chat.id, 'пидора ответ')
-            print('ned')
+
     except:
         pass
 
-
 @bot.message_handler(func=lambda message: True, content_types=['text'])
-def echo_msg(message):
-    user_name = message.from_user.first_name
-    if user_name is None:
-        user_name = message.from_user.first_name + message.from_user.last_name
-
-    if user_name == "EkaterinaBerestova":
-        if random.random() > 0.85:
-            bot.send_message(message.chat.id, message.from_user.first_name + ", ты поняла?")
-
-    if random.random() > 0.88:
-        bot.send_message(message.chat.id, random.choice(randPhrases).format(user_name))
-
-
-@bot.message_handler(func=lambda message: True, content_types=['text'])
-
-
 def send_logs(message):
     chat_id = str(message.chat.id)
     user_name = message.from_user.username
     if user_name is None:
         user_name = message.from_user.first_name + message.from_user.last_name
-    user_first_name = message.from_user.first_name
     message = message.text
     log = chat_id + " | " + user_name + " | " + message
     bot.send_message(logChatId, log)
