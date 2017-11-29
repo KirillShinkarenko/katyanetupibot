@@ -18,6 +18,7 @@ hardCoreChatId = str(chatIds['hardCoreChatId'])
 kirillChatId = str(chatIds['kirillChatId'])
 kateChatId = str(chatIds['kateChatId'])
 lisaChatId = str(chatIds['lisaChatId'])
+chbuChatId = str(chatIds['chbuChatId'])
 
 NON_LETTERS = re.compile('[^а-яё \-]+', flags=re.UNICODE)
 ONLY_DASHES = re.compile('^\-+$', flags=re.UNICODE)
