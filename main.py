@@ -49,6 +49,14 @@ def send_katy(message):
         bot.send_message(hardCoreChatId, d)
     send_logs(message)
 
+    
+@bot.message_handler(commands=['ch'])
+def send_katy(message):
+    s = message.text
+    d = s[4:]
+    if d != "":
+        bot.send_message(chbuChatId, d)
+        
 
 @bot.message_handler(commands=['l'])
 def send_katy(message):
