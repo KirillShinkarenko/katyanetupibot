@@ -4,8 +4,7 @@ import urllib
 import json
 import codecs
 import re
-import datetime
-import time
+from datetime import time
 
 import telebot
 
@@ -28,12 +27,12 @@ vowels = {'о', 'е', 'а', 'я', 'у', 'ю', 'ы'}
 rules = {'о': 'е', 'а': 'я', 'у': 'ю', 'ы': 'и'}
 
 randPhrases = codecs.open("ne_tupi_phrases.txt", "r", "utf-8").read().split("\n")
-randNeurals = codecs.open("ne_tupi_neurals.txt", "r", "utf-8").read().split("\n")
 
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
     bot.send_message(message.chat.id, "Bomjur")
+    send_logs(message)
 
 
 @bot.message_handler(commands=['getChatId'])
@@ -49,6 +48,14 @@ def send_katy(message):
     if d != "":
         bot.send_message(hardCoreChatId, d)
     send_logs(message)
+
+
+@bot.message_handler(commands=['ch'])
+def send_katy(message):
+    s = message.text
+    d = s[4:]
+    if d != "":
+        bot.send_message(chbuChatId, d)
 
 
 @bot.message_handler(commands=['l'])
