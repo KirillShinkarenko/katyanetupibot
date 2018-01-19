@@ -4,7 +4,8 @@ import urllib
 import json
 import codecs
 import re
-from datetime import time
+import datetime
+import time
 
 import telebot
 
@@ -27,12 +28,12 @@ vowels = {'о', 'е', 'а', 'я', 'у', 'ю', 'ы'}
 rules = {'о': 'е', 'а': 'я', 'у': 'ю', 'ы': 'и'}
 
 randPhrases = codecs.open("ne_tupi_phrases.txt", "r", "utf-8").read().split("\n")
+randNeurals = codecs.open("ne_tupi_neurals.txt", "r", "utf-8").read().split("\n")
 
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
     bot.send_message(message.chat.id, "Bomjur")
-    send_logs(message)
 
 
 @bot.message_handler(commands=['getChatId'])
@@ -95,20 +96,7 @@ def send_katy(message):
 
 @bot.message_handler(commands=['weather'])
 def send_weather_nsu(message):
-    try:
-        usock = urllib.request.urlopen("http://nsuweather.appspot.com/full", data=None)
-    except:
-        bot.send_message(message.chat.id, "Сайт лежит, подожди :)")
-        time.sleep(10)
-        send_weather_nsu(message)
-
-    nsu_json_string = usock.read()
-    nsu_json_dict = json.loads(nsu_json_string)
-    current_temperature_nsu = str(nsu_json_dict['current'])
-    temperature_to_message = message.from_user.first_name + ", вот твоя погода: " + current_temperature_nsu + u"\u00A0" + "°C"
-    if message.from_user.username == "chagin_kv":
-        temperature_to_message = "Погода спешл фор Чагин: " + "+69" + u"\u00A0" + "°C"
-    bot.send_message(message.chat.id, temperature_to_message)
+    bot.send_message(message.chat.id, 'Норм бот тут: @weather_vz_bot')
     send_logs(message)
 
 
@@ -122,9 +110,13 @@ def huecho_msg(message):
         user_name = message.from_user.first_name + message.from_user.last_name
     if str(text_msg).lower() == 'нет':
         bot.send_message(message.chat.id, 'пидора ответ')
-    if 0.7 < huendom < 0.8:
+    if str(text_msg).lower() == 'да':
+        bot.send_message(message.chat.id, 'винда')
+    if 0.75 < huendom < 0.8:
         bot.send_message(message.chat.id, random.choice(randPhrases).format(user_name))
-    if huendom > 0.88:
+    if 0.65 < huendom < 0.67:
+        bot.send_message(message.chat.id, random.choice(randNeurals).format(user_name))
+    if huendom > 0.95:
         try:
             if len(words) < 3:
                 pass
@@ -146,7 +138,7 @@ def huecho_msg(message):
                         huemessage = u'ху%s' % postfix[1:]
             else:
                 huemessage = u"ху%s" % postfix
-                bot.send_message(message.chat.id, huemessage)
+            bot.send_message(message.chat.id, huemessage)
         except:
             pass
 
@@ -162,4 +154,13 @@ def send_logs(message):
     bot.send_message(logChatId, log)
 
 
-bot.polling()
+def bot_launch():
+    try:
+        if __name__ == '__main__':
+            bot.polling(none_stop=True)
+    except:
+        time.sleep(60)
+        bot_launch()
+
+
+bot_launch()
