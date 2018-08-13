@@ -4,7 +4,7 @@ import urllib
 import json
 import codecs
 import re
-from datetime import time
+import time
 
 import telebot
 
@@ -15,10 +15,7 @@ chatIds = json.loads(chatIds)
 
 logChatId = str(chatIds['logChatId'])
 hardCoreChatId = str(chatIds['hardCoreChatId'])
-kirillChatId = str(chatIds['kirillChatId'])
 kateChatId = str(chatIds['kateChatId'])
-lisaChatId = str(chatIds['lisaChatId'])
-chbuChatId = str(chatIds['chbuChatId'])
 
 NON_LETTERS = re.compile('[^а-яё \-]+', flags=re.UNICODE)
 ONLY_DASHES = re.compile('^\-+$', flags=re.UNICODE)
@@ -27,7 +24,7 @@ vowels = {'о', 'е', 'а', 'я', 'у', 'ю', 'ы'}
 rules = {'о': 'е', 'а': 'я', 'у': 'ю', 'ы': 'и'}
 
 randPhrases = codecs.open("ne_tupi_phrases.txt", "r", "utf-8").read().split("\n")
-
+randNeurals = codecs.open("ne_tupi_neurals.txt", "r", "utf-8").read().split("\n")
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
@@ -48,33 +45,6 @@ def send_katy(message):
     if d != "":
         bot.send_message(hardCoreChatId, d)
     send_logs(message)
-
-
-@bot.message_handler(commands=['ch'])
-def send_katy(message):
-    s = message.text
-    d = s[4:]
-    if d != "":
-        bot.send_message(chbuChatId, d)
-
-
-@bot.message_handler(commands=['l'])
-def send_katy(message):
-    s = message.text
-    d = s[3:]
-    if d != "":
-        bot.send_message(lisaChatId, d)
-    send_logs(message)
-
-
-@bot.message_handler(commands=['ks'])
-def send_katy(message):
-    s = message.text
-    d = s[4:]
-    if d != "":
-        bot.send_message(kirillChatId, d)
-    else:
-        bot.send_message(kirillChatId, 'lol kirill')
 
 
 @bot.message_handler(commands=['kate'])
@@ -103,7 +73,7 @@ def send_katy(message):
 
 @bot.message_handler(commands=['weather'])
 def send_weather_nsu(message):
-    bot.send_message(message.chat.id, 'Норм бот тут: @weather_vz_bot')
+    bot.send_message(message.chat.id, 'here @weather_vz_bot')
     send_logs(message)
 
 
@@ -117,13 +87,11 @@ def huecho_msg(message):
         user_name = message.from_user.first_name + message.from_user.last_name
     if str(text_msg).lower() == 'нет':
         bot.send_message(message.chat.id, 'пидора ответ')
-    if str(text_msg).lower() == 'да':
-        bot.send_message(message.chat.id, 'винда')
     if 0.75 < huendom < 0.8:
         bot.send_message(message.chat.id, random.choice(randPhrases).format(user_name))
-    if 0.65 < huendom < 0.67:
+    if 0.65 < huendom < 0.6:
         bot.send_message(message.chat.id, random.choice(randNeurals).format(user_name))
-    if huendom > 0.95:
+    if huendom > 0.9:
         try:
             if len(words) < 3:
                 pass
@@ -164,7 +132,7 @@ def send_logs(message):
 def bot_launch():
     try:
         if __name__ == '__main__':
-            bot.polling(none_stop=True)
+            bot.polling(none_stop=True, interval=0)
     except:
         time.sleep(60)
         bot_launch()
